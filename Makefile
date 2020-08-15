@@ -1,14 +1,16 @@
 APPLICATION := $(shell basename `pwd`)
 BUILD_RFC3339 := $(shell date -u +"%Y-%m-%dT%H:%M:%S+00:00")
-COMMIT := $(shell git rev-parse HEAD)
+PACKAGE := $(shell git remote get-url --push origin | sed -E 's/.+[@|/](.+)\.(.+).git/\1.\2/' | sed 's/\:/\//')
+REVISION := $(shell git rev-parse HEAD)
 VERSION := $(shell git describe --tags)
 
-GO_LDFLAGS := " \
+GO_LDFLAGS := "-w -s \
 	-X github.com/jnovack/release.Application=${APPLICATION} \
- 	-X github.com/jnovack/release.BuildRFC3339=${BUILD_RFC3339} \
-	-X github.com/jnovack/release.Revision=${COMMIT} \
+	-X github.com/jnovack/release.BuildRFC3339=${BUILD_RFC3339} \
+	-X github.com/jnovack/release.Package=${PACKAGE} \
+	-X github.com/jnovack/release.Revision=${REVISION} \
 	-X github.com/jnovack/release.Version=${VERSION} \
-	-s -w"
+	"
 
 all: build
 

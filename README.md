@@ -29,15 +29,17 @@ Then, when you build, add these variables to the command line:
 ```sh
 APPLICATION=$(shell basename `pwd`)
 BUILD_RFC3339=$(shell date -u +"%Y-%m-%dT%H:%M:%S+00:00")
-COMMIT=$(shell git rev-parse HEAD)
+PACKAGE=$(shell git remote get-url --push origin | sed -E 's/.+[@|/](.+)\.(.+).git/\1.\2/' | sed 's/\:/\//')
+REVISION=$(shell git rev-parse HEAD)
 VERSION=$(shell git describe --tags)
 
-GO_LDFLAGS=" \
+GO_LDFLAGS="-w -s \
 	-X github.com/jnovack/release.Application=${APPLICATION} \
- 	-X github.com/jnovack/release.BuildRFC3339=${BUILD_RFC3339} \
-	-X github.com/jnovack/release.Revision=${COMMIT} \
+	-X github.com/jnovack/release.BuildRFC3339=${BUILD_RFC3339} \
+	-X github.com/jnovack/release.Package=${PACKAGE} \
+	-X github.com/jnovack/release.Revision=${REVISION} \
 	-X github.com/jnovack/release.Version=${VERSION} \
-	-s -w"
+	"
 
 go build -ldflags $(GO_LDFLAGS) main.go
 ```
@@ -50,15 +52,17 @@ All the variables are exported, so you can reference them within your code.
 
 ```go
 var (
-	// Application supplied by the linker
-	Application = "go-application"
-	// BuildRFC3339 supplied by the linker
+	// Application is the name of the executable
+	Application = "myapp"
+	// BuildRFC3339 is the build date in RFC 3339 format
 	BuildRFC3339 = "1970-01-01T00:00:00+00:00"
-	// Version supplied by the linker
-	Version = "v0.0.0"
-	// Commit supplied by the linker
-	Commit = "00000000"
-	// GoVersion supplied by the runtime
+	// GoVersion is the version of go that built this executable
 	GoVersion = runtime.Version()
+	// Package name
+	Package = "go/myapp"
+	// Revision is the source control hash
+	Revision = "00000000"
+	// Version of the application (following semver.org standards)
+	Version = "v0.0.0"
 )
 ```
