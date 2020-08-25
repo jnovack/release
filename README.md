@@ -20,8 +20,13 @@ At the top of `main.go`
 
 ```go
 import (
-	_ "github.com/jnovack/release"
+	"fmt"
+	"github.com/jnovack/release"
 )
+
+func main() {
+	fmt.Printf(release.Info())
+}
 ```
 
 Then, when you build, add these variables to the command line:
