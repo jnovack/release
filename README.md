@@ -25,7 +25,7 @@ import (
 )
 
 func main() {
-	fmt.Printf(release.Info())
+	fmt.Println(release.Info())
 }
 ```
 

@@ -29,5 +29,5 @@ func init() {
 
 // Info returns a formatted version string
 func Info() string {
-	return fmt.Sprintf("%s %s git commit %s go version %s build date %s\n", Application, Version, Revision, GoVersion, BuildRFC3339)
+	return fmt.Sprintf("%s %s git commit %s go version %s build date %s", Application, Version, Revision, GoVersion, BuildRFC3339)
 }
